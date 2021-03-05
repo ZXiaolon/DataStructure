@@ -8,17 +8,19 @@ template<class DataType>
 class LinearList
 {
 	private:
-		DataType data[MAXSIZE];
+		DataType* data;
 		int lenght;
+		int maxsize; //data max space;it will be change if increase space;
 		
 	public:
 		LinearList();
 		~LinearList();
-		int Length();
+		
+		void IncreaseSize(); 
+		int Lenght();
 		
 		DataType Get(int i);
 		DataType Delete(int i);
-		
 		void Insert(int i,DataType &elem);
 		int Locate(DataType &elem);
 		void show();
@@ -27,7 +29,9 @@ class LinearList
  
 template<class DataType>
 LinearList<DataType>::LinearList(){
+	data = new DataType[MAXSIZE];
 	lenght = 0;
+	maxsize = MAXSIZE;
 }
  
  template<class DataType>
@@ -36,12 +40,45 @@ LinearList<DataType>::LinearList(){
  }
  
  template<class DataType>
+ void LinearList<DataType>::IncreaseSize(){
+ 	//increase space to complete the dynamical memory distribution
+ 	DataType* temp=NULL;
+ 	temp = data;
+ 	data = new DataType[maxsize+MAXSIZE];
+ 	
+ 	//copy the values updata to the new data
+ 	for(int i=0;i<lenght;i++){
+ 		data[i] = temp[i];
+	 }
+	 maxsize = maxsize+MAXSIZE;
+	 delete[] temp;
+ }
+ 
+ template<class DataType>
+ int LinearList<DataType>::Lenght(){
+ 	return lenght;
+ }
+
+ 
+ template<class DataType>
  DataType LinearList<DataType>::Get(int i){
- 	// get the data[] i-th elem
- 	if(i<1||i>lenght) cout<<"the number is illegal!"<<endl;
- 	cout<<data[i-1]<<endl;
+ 	//return the i-th elem
+ 	if(i<1||i>lenght){
+ 		cout<<"the number is illegal"<<endl;
+ 		return;
+	 }
+	 cout<<data[i-1];
  	return data[i-1];
- };
+ }
+ 
+ template<class DataType>
+ int LinearList<DataType>::Locate(DataType &elem){
+ 	for(int i=0;i<lenght;i++){
+ 		if(data[i]==elem) return i+1;
+ 		return 1;
+	 }
+ }
+ 
  
  template<class DataType>
 DataType LinearList<DataType>::Delete(int i){
@@ -65,7 +102,11 @@ void LinearList<DataType>::Insert(int i,DataType &elem){
  		//the must be handle
 	 }
  	
- 	if(i<1 || i>lenght+1) cout<<"the number is illegal!"<<endl;
+ 	if(i<0 || i>lenght+1) 
+	 {
+	 cout<<"the number is illegal!"<<endl;
+	 return;	
+	 }
  	for(int j=lenght-1;j>=i-1;j--){
  		data[j+1] = data[j];
 	 }
@@ -77,19 +118,41 @@ void LinearList<DataType>::Insert(int i,DataType &elem){
  template<class DataType>
  void LinearList<DataType>::show(){
  	for(int i=0;i<lenght;i++) cout<<data[i]<<endl;
- 	cout<<"length is"<<lenght<<endl;
  }
  
+ void home(){
+ 	cout<<"1.Insert"<<endl;
+ 	cout<<"2.Get"<<endl;
+ 	cout<<"3.Delete"<<endl;
+ 	cout<<"4.Locate"<<endl;
+ 	cout<<"5.show"<<endl;
+ }
  int main(){
- 	cout<<"begin"<<endl;
+ 	
+ 	cout<<"LinearList"<<endl;
+ 	
  	LinearList<int> data;
- 	cout<<"please insert 3 number"<<endl;
- 	for(int i=1;i<=3;i++){
- 		int temp;
- 		cin>>temp;
- 		data.Insert(i,temp);
+ 	home();
+ 	int choose;
+ 	cout<<"input your choose:";
+ 	cin>>choose;
+ 	switch(choose){
+	 case 1:
+	 	{
+	 		int times;
+	 		cout<<"input the times of insert:"<<endl;
+	 		cin>>times;
+	 		for(int i=0;i<times;i++){
+	 			int temp;
+	 			cout<<"input the value to inset:";
+	 			cin>> temp;
+	 			data.Insert(i,temp);
+			 }
+	 		
+		 }
 	 }
 	 data.show();
+	 cout<<"lenght of data is:"<<data.Lenght()<<endl;
 	 
  	return 0;
  }
